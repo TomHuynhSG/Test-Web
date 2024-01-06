@@ -1,3 +1,18 @@
+# COSC2767 Assignment 3
+```
+# RMIT University Vietnam
+#  Course: COSC2767 Systems Deployment and Operations
+#  Semester: 2023C
+#  Assessment: Assignment 3
+#  Author: 
+#  ID:
+#  Created date: 06/01/2023
+#  Last modified: 21/01/2023
+#  Acknowledgement: RMIT Canvas, ChatGPT, AWS Documentation, StackOverflow,
+#  AWSAcademy Learner Lab, GitHub Documentation, Docker Documentation
+#  ngrok Documentation, Jenkins Documentation
+```
+
 # RMIT Store 🛍️
 <p align="center">
     <img src="https://i.imgur.com/e6H7HA3.jpg" width=900>
