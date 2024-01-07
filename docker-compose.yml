@@ -1,0 +1,16 @@
+version: '3'
+services:
+  db:
+    image: mysql:tag
+    volumes:
+      - ./sql-scripts/:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_PASSWORD: rmit_password
+
+  web:
+    image: s3963207-rmit-store
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+      - "443:443"

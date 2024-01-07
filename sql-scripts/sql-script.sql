@@ -1,3 +1,7 @@
+CREATE USER 'db_admin'@'rmit-store.c9kica0o89u0.us-east-1.rds.amazonaws.com' IDENTIFIED BY 'rmit_password';
+GRANT ALL PRIVILEGES ON *.* TO 'db_admin'@'rmit-store.c9kica0o89u0.us-east-1.rds.amazonaws.com';
+FLUSH PRIVILEGES;
+
 DROP DATABASE IF EXISTS rmit_store_db;
 
 CREATE DATABASE rmit_store_db;
