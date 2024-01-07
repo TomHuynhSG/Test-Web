@@ -50,7 +50,7 @@ Resources:
 
           mkdir assignment-3
           cd assignment-3
-          git clone https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
           # Install tree command to show the directory tree of the pulled repository
           sudo yum install tree -y
