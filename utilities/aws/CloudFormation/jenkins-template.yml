@@ -23,13 +23,20 @@ Resources:
           sudo su -
 
           # Install Git
-          if rpm -q git; then
-            echo "git already installed, skipping..."
-          else
-            echo "Installing git..."
-            sudo yum install git -y
-            git --version
-          fi
+          sudo yum install git -y
+
+          # Install MariaDB Server
+          sudo yum install -y mariadb-server
+          sudo service mariadb start
+          sudo systemctl enable mariadb
+
+          # Install PHP and php-mysql module
+          sudo yum install -y php php-mysql
+
+          # Install Apache server
+          sudo yum install -y httpd
+          sudo service httpd start
+          sudo systemctl enable httpd
 
           echo '
           #!/bin/bash
@@ -77,8 +84,7 @@ Resources:
             service docker status
           )
 
-
-JenkinsEIP:
+  JenkinsEIP:
     Type: AWS::EC2::EIP
     Properties:
       {}
