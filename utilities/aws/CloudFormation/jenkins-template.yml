@@ -1,6 +1,105 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'This is a template for launching a EC2 Instance that host a Jenkins Server'
+Parameters:
+  UserDataScript:
+    Type: String
+    Default: |
+      #!/bin/bash
+
+      echo "sudo su -" >> /home/ec2-user/.bashrc
+      public_ipv4=$(curl -s http://checkip.amazonaws.com/)
+
+      sudo su -
+
+      # Install Git
+      sudo yum install git -y
+
+      # Install MariaDB Server
+      sudo yum install -y mariadb-server
+      sudo service mariadb start
+      sudo systemctl enable mariadb
+
+      # Install PHP and php-mysql module
+      sudo yum install -y php php-mysql
+
+      # Install Apache server
+      sudo yum install -y httpd
+      sudo service httpd start
+      sudo systemctl enable httpd
+
+      echo '
+      #!/bin/bash
+
+      # Check if assignment-3/ exists
+      if [ -d "assignment-3" ]; then
+          echo "Removing assignment-3/..."
+          rm -rf assignment-3/
+          echo "assignment-3/ removed."
+      fi
+
+      mkdir assignment-3
+      cd assignment-3
+      git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+
+      # Install tree command to show the directory tree of the pulled repository
+      sudo yum install tree -y
+      tree ~/assignment-3/
+
+      # Navigate to the assignment-3 directory
+      cd ~/assignment-3/COSC2767-RMIT-Store/utilities
+
+      # Find all Bash script files and make them executable
+      find . -type f -name "*.sh" -exec chmod +x {} \;
+
+      echo "Bash script files in assignment-3 directory made executable."
+
+      # Source .bashrc to apply changes
+      source ~/.bashrc
+      ' >> /root/init_repo.sh
+
+      chmod +x /root/init_repo.sh
+
+
+      sudo yum install -y yum-utils
+      sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+      echo "Installing docker..."
+      sudo yum install docker -y
+      # Add group membership for the default ec2-user
+      # so you can run all docker commands without using the sudo command
+
+      # Prepare permission for Docker
+      sudo usermod -a -G docker ec2-user
+      # Run subsequent commands in the current shell without using newgrp
+      (
+        # Enable docker service at AMI boot time and start docker service
+        sudo systemctl enable --now docker.service
+        sudo systemctl start docker.service
+        service docker status
+      )
+
 Resources:
+  JenkinsLaunchTemplate:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateName: JenkinsLaunchTemplate
+      LaunchTemplateData:
+        InstanceType: t2.micro
+        ImageId: ami-0ed9277fb7eb570c9
+        KeyName: s3963207_asm2_key
+        SecurityGroupIds: 
+          - JenkinsSecurityGroup
+        TagSpecifications:
+          - ResourceType: instance
+            Tags: 
+              - Key: Name
+                Value: Jenkins_Server_Asm3
+        Monitoring:
+          Enabled: true
+        UserData: 
+          Fn::Base64: !Sub ${UserDataScript}
+
   JenkinsEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -14,80 +113,7 @@ Resources:
           Value: Jenkins_Server_Asm3
       Monitoring: true
       UserData: 
-        Fn::Base64: !Sub |
-          #!/bin/bash
-
-          echo "sudo su -" >> /home/ec2-user/.bashrc
-          public_ipv4=$(curl -s http://checkip.amazonaws.com/)
-
-          sudo su -
-
-          # Install Git
-          sudo yum install git -y
-
-          # Install MariaDB Server
-          sudo yum install -y mariadb-server
-          sudo service mariadb start
-          sudo systemctl enable mariadb
-
-          # Install PHP and php-mysql module
-          sudo yum install -y php php-mysql
-
-          # Install Apache server
-          sudo yum install -y httpd
-          sudo service httpd start
-          sudo systemctl enable httpd
-
-          echo '
-          #!/bin/bash
-
-          # Check if assignment-3/ exists
-          if [ -d "assignment-3" ]; then
-              echo "Removing assignment-3/..."
-              rm -rf assignment-3/
-              echo "assignment-3/ removed."
-          fi
-
-          mkdir assignment-3
-          cd assignment-3
-          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
-
-          # Install tree command to show the directory tree of the pulled repository
-          sudo yum install tree -y
-          tree ~/assignment-3/
-
-          # Navigate to the assignment-3 directory
-          cd ~/assignment-3/COSC2767-RMIT-Store/utilities
-
-          # Find all Bash script files and make them executable
-          find . -type f -name "*.sh" -exec chmod +x {} \;
-
-          echo "Bash script files in assignment-3 directory made executable."
-
-          # Source .bashrc to apply changes
-          source ~/.bashrc
-          ' >> /root/init_repo.sh
-
-          chmod +x /root/init_repo.sh
-
-          sudo yum install -y yum-utils
-          sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-          sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-          echo "Installing docker..."
-          sudo yum install docker -y
-          # Add group membership for the default ec2-user
-          # so you can run all docker commands without using the sudo command
-
-          # Prepare permission for Docker
-          sudo usermod -a -G docker ec2-user
-          # Run subsequent commands in the current shell without using newgrp
-          (
-            # Enable docker service at AMI boot time and start docker service
-            sudo systemctl enable --now docker.service
-            sudo systemctl start docker.service
-            service docker status
-          )
+        Fn::Base64: !Sub ${UserDataScript}
 
   JenkinsEIP:
     Type: AWS::EC2::EIP
