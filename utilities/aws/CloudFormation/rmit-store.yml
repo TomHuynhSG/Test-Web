@@ -1,14 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'This is a template for launching a EC2 Instance that host a RMITStore Server'
 Resources:
-RMITStoreDatabaseEC2Instance:
+  RMITStoreDatabaseEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3963207_asm2_key
       SecurityGroupIds: 
-        - RMITStoreSecurityGroup
+        - JenkinsSecurityGroup
       Tags: 
         - Key: Name
           Value: RMIT_Store_DB_Test
@@ -87,7 +87,7 @@ RMITStoreDatabaseEC2Instance:
       InstanceType: t2.micro
       KeyName: s3963207_asm2_key
       SecurityGroupIds: 
-        - RMITStoreSecurityGroup
+        - JenkinsSecurityGroup
       Tags: 
         - Key: Name
           Value: RMIT_Store_Test
