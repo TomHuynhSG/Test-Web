@@ -1,17 +1,7 @@
 version: '3'
 services:
-  db:
-    image: mariadb
-    restart: always
-    volumes:
-      - ./sql-scripts/:/docker-entrypoint-initdb.d/
-    environment:
-      MYSQL_ROOT_PASSWORD: rmit_password
-
   web:
-    image: s3963207-rmit-store
-    depends_on:
-      - db
+    image: laansdole/s3963207-rmit-store
     ports:
       - "80:80"
       - "443:443"
