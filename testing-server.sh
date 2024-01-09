@@ -8,6 +8,8 @@ sudo systemctl enable httpd
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
+sudo mysql <sql/setup-script.sql
+
 sudo yum install php-cli php-json php-common php-mbstring wget -y
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
