@@ -1,7 +1,7 @@
 {
   "name": "ec2-user/ec2-user",
   "require-dev": {
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5.0"
   },
   "autoload": {
     "psr-4": {
