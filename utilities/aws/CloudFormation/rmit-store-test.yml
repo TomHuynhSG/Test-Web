@@ -1,5 +1,5 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: 'This is a template for launching a EC2 Instance that host a RMITStore Server'
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is a template for launching a EC2 Instance that host a RMITStore Server"
 Resources:
   AnsibleEC2Instance:
     Type: AWS::EC2::Instance
@@ -7,13 +7,13 @@ Resources:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3963207_asm2_key
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - AnsibleSecurityGroup
-      Tags: 
+      Tags:
         - Key: Name
-          Value: RMIT_Store_Ansible
+          Value: TestRMIT-Store_Ansible
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -21,16 +21,6 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
-          
-          # Change hostname
-          rm -f /etc/hostname
-          echo "ansible_server" >> /etc/hostname
-
-          # Add ansible admin to sudoer
-          sudo useradd ansibleadmin
-          sudo passwd -d ansibleadmin
-          echo "ansibleadmin ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-          sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
           echo '
           #!/bin/bash
@@ -65,14 +55,22 @@ Resources:
           # Install Git
           sudo yum install git -y
 
-          # Clone RMIT Store repository
-          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
-
           # Install Ansible
-          sudo yum install ansible -y
+          sudo amazon-linux-extras install ansible2 -y
 
-          # Restart SSH server
-          sudo service ssh restart
+          # Change hostname
+          rm -f /etc/hostname
+          echo "ansible_server" >> /etc/hostname
+
+          # Add ansible admin to sudoer
+          sudo useradd ansibleadmin
+          sudo passwd -d ansibleadmin
+          echo "ansibleadmin ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+          sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+          service sshd reload
+
+          reboot
 
   RMITStoreDatabaseEC2Instance:
     Type: AWS::EC2::Instance
@@ -80,13 +78,13 @@ Resources:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3963207_asm2_key
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - JenkinsSecurityGroup
-      Tags: 
+      Tags:
         - Key: Name
-          Value: RMIT_Store_DB
+          Value: TestRMIT-Store_DB
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -94,10 +92,6 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
-          
-          # Change hostname
-          rm -f /etc/hostname
-          echo "db_server" >> /etc/hostname
 
           echo '
           #!/bin/bash
@@ -155,19 +149,27 @@ Resources:
             service docker status
           )
 
+          # Change hostname
+          rm -f /etc/hostname
+          echo "db_server" >> /etc/hostname
+
+          service sshd reload
+
+          reboot
+
   RMITStoreEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3963207_asm2_key
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - JenkinsSecurityGroup
-      Tags: 
+      Tags:
         - Key: Name
-          Value: RMIT_Store
+          Value: TestRMIT-Store
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -176,9 +178,10 @@ Resources:
 
           sudo su -
 
-          # Change hostname
-          rm -f /etc/hostname
-          echo "dev_server" >> /etc/hostname
+          echo '
+          kill $(lsof -t -i tcp:80)
+          docker start my-rmit-store
+          ' >> /root/.bashrc
 
           echo '
           #!/bin/bash
@@ -237,15 +240,28 @@ Resources:
           )
 
           # Run my prepared Docker Image
-          sudo docker stop $(sudo docker ps -aq)
-          kill $(lsof -t -i tcp:80)
           docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
+
+          # Change hostname
+          rm -f /etc/hostname
+          echo "dev_server" >> /etc/hostname
+
+          # Add ansible admin to sudoer
+          sudo useradd ansibleadmin
+          sudo passwd -d ansibleadmin
+
+          sudo usermod -aG docker ansibleadmin
+          echo "ansibleadmin ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+          sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+          service sshd reload
+
+          reboot
 
   RMITStoreEIP:
     Type: AWS::EC2::EIP
-    Properties:
-      {}
-    
+    Properties: {}
+
   RMITStoreEIPAssociation:
     Type: AWS::EC2::EIPAssociation
     Properties:
@@ -255,19 +271,20 @@ Resources:
   RMITStoreRecoveryAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: Trigger a recovery when instance status check fails for 15
+      AlarmDescription:
+        Trigger a recovery when instance status check fails for 15
         consecutive minutes.
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '15'
+      Period: "60"
+      EvaluationPeriods: "15"
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
-      AlarmActions: [ !Sub "arn:aws:automate:${AWS::Region}:ec2:recover" ]
+      Threshold: "0"
+      AlarmActions: [!Sub "arn:aws:automate:${AWS::Region}:ec2:recover"]
       Dimensions:
-      - Name: InstanceId
-        Value: !Ref RMITStoreEC2Instance
+        - Name: InstanceId
+          Value: !Ref RMITStoreEC2Instance
 
 Outputs:
   ElasticIP:
