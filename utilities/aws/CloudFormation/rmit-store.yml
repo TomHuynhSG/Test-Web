@@ -1,6 +1,68 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'This is a template for launching a EC2 Instance that host a RMITStore Server'
 Resources:
+  AnsibleEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0ed9277fb7eb570c9
+      InstanceType: t2.micro
+      KeyName: s3963207_asm2_key
+      SecurityGroupIds: 
+        - AnsibleSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: RMIT_Store_Ansible
+      Monitoring: true
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+
+          echo "sudo su -" >> /home/ec2-user/.bashrc
+          public_ipv4=$(curl -s http://checkip.amazonaws.com/)
+
+          sudo su -
+          
+          # Change hostname
+          rm -f /etc/hostname
+          echo "ansible_server" >> /etc/hostname
+
+          echo '
+          #!/bin/bash
+
+          # Check if COSC2767-RMIT-Store/ exists
+          if [ -d "COSC2767-RMIT-Store" ]; then
+              echo "Removing COSC2767-RMIT-Store/..."
+              rm -rf COSC2767-RMIT-Store/
+              echo "COSC2767-RMIT-Store/ removed."
+          fi
+
+          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+
+          # Install tree command to show the directory tree of the pulled repository
+          sudo yum install tree -y
+          tree ~/COSC2767-RMIT-Store/
+
+          # Navigate to the COSC2767-RMIT-Store directory
+          cd ~/COSC2767-RMIT-Store/utilities
+
+          # Find all Bash script files and make them executable
+          find . -type f -name "*.sh" -exec chmod +x {} \;
+
+          echo "Bash script files in assignment-3 directory made executable."
+
+          # Source .bashrc to apply changes
+          source ~/.bashrc
+          ' >> /root/init_repo.sh
+
+          chmod +x /root/init_repo.sh
+
+          # Install Git
+          sudo yum install git -y
+
+          # Clone RMIT Store repository
+          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+
+
   RMITStoreDatabaseEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -11,7 +73,7 @@ Resources:
         - JenkinsSecurityGroup
       Tags: 
         - Key: Name
-          Value: RMIT_Store_DB_Test
+          Value: RMIT_Store_DB
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -21,6 +83,10 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
+          
+          # Change hostname
+          rm -f /etc/hostname
+          echo "db_server" >> /etc/hostname
 
           echo '
           #!/bin/bash
@@ -63,8 +129,6 @@ Resources:
           sudo service mariadb start
           sudo systemctl enable mariadb
 
-          sudo mysql -hrmit-store.c9kica0o89u0.us-east-1.rds.amazonaws.com -udb_admin -prmit_password < /root/COSC2767-RMIT-Store/sql-scripts/sql-script.sql
-
           echo "Installing docker..."
           sudo yum install docker -y
           # Add group membership for the default ec2-user
@@ -90,7 +154,7 @@ Resources:
         - JenkinsSecurityGroup
       Tags: 
         - Key: Name
-          Value: RMIT_Store_Test
+          Value: RMIT_Store
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -100,6 +164,10 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
+
+          # Change hostname
+          rm -f /etc/hostname
+          echo "dev_server" >> /etc/hostname
 
           echo '
           #!/bin/bash
