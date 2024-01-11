@@ -1,7 +1,9 @@
 {
   "name": "team-6/assignment-3-source",
+  "description": "A PHP project source for Assignment 3",
+  "type": "project",
   "require-dev": {
-    "phpunit/phpunit": "10"
+    "phpunit/phpunit": "^10.0"
   },
   "autoload": {
     "psr-4": {
@@ -29,5 +31,12 @@
       "name": "Dong Pham",
       "email": "s3817726@rmit.edu.vn"
     }
-  ]
+  ],
+  "keywords": [
+    "php",
+    "composer",
+    "assignment",
+    "team-6"
+  ],
+  "require": {}
 }
