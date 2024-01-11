@@ -8,4 +8,4 @@ cd /var/www/html
 /usr/local/bin/composer require --dev phpunit/phpunit
 
 # Testing commands
-./vendor/bin/phpunit --log-junit /home/log/test-results.xml tests/
+./vendor/bin/phpunit --log-junit /home/ec2-user/log/test-results.xml tests/
