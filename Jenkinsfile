@@ -61,9 +61,6 @@ pipeline {
         stage('Collect Test Results and Notify') {
             steps {
                 script {
-                    // Print the files in the remote directory
-                    sh "ls -l /home/ec2-user/log/"
-
                     // 'Publish Over SSH' to copy the test-results.xml back to Jenkins server
                     sshPublisher(
                         publishers: [
