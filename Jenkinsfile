@@ -48,7 +48,10 @@ pipeline {
                 script {
                     sshagent(credentials: ['testing-server-ssh-key']) {
                         sh """
-                            ssh -tt ec2-user@44.195.41.174 'sudo sh source-testing.sh'
+                            ssh -tt ec2-user@44.195.41.174 << EOF
+                                sudo sh source-testing.sh
+                                exit 0
+                            << EOF
                         """
                     }
                 }
