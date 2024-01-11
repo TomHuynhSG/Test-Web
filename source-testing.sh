@@ -1,7 +1,7 @@
-sudo su
-
+sudo mysql <sql/clean-script.sql
 sudo mysql <sql/setup-script.sql
 
+rm -rf /var/www/html/*
 mv src/* /var/www/html/
 cd /var/www/html
 /usr/local/bin/composer install

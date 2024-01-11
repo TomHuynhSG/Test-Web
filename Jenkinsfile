@@ -49,6 +49,7 @@ pipeline {
                     sshagent(credentials: ['testing-server-ssh-key']) {
                         sh """
                             ssh -o StrictHostKeyChecking=no -tt ec2-user@44.195.41.174 << EOF
+                            sudo su
                             sudo sh source-testing.sh
                             exit
                             exit
