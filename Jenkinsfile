@@ -58,40 +58,40 @@ pipeline {
             }
         }
 
-        stage('Collect Test Results and Notify') {
-            steps {
-                script {
-                    // 'Publish Over SSH' to copy the test-results.xml back to Jenkins server
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'Testing Server',
-                                transfers: [
-                                    sshTransfer(
-                                        sourceFiles: '/home/ec2-user/log/test-results.xml',
-                                        remoteDirectory: 'jenkins-collected-results/'
-                                    )
-                                ],
-                                usePromotionTimestamp: false,
-                                useWorkspaceInPromotion: false,
-                                verbose: false
+        script {
+            // Print the files in the remote directory
+            sh "ls -l /home/ec2-user/log/"
+
+            // 'Publish Over SSH' to copy the test-results.xml back to Jenkins server
+            sshPublisher(
+                publishers: [
+                    sshPublisherDesc(
+                        configName: 'Testing Server',
+                        transfers: [
+                            sshTransfer(
+                                sourceFiles: '/home/ec2-user/log/test-results.xml',
+                                remoteDirectory: 'jenkins-collected-results/'
                             )
-                        ]
+                        ],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: false
                     )
+                ]
+            )
+            
+            // Parse the test-results.xml file and check for failures
+            def testResults = readFile('jenkins-collected-results/test-results.xml')
+            def failures = sh(script: "echo '${testResults}' | grep -c 'failures=\"[1-9]' || true", returnStatus: true).trim()
 
-                    // Parse the test-results.xml file and check for failures
-                    def testResults = readFile('jenkins-collected-results/test-results.xml')
-                    def failures = sh(script: "echo '${testResults}' | grep -c 'failures=\"[1-9]' || true", returnStatus: true).trim()
-
-                    // Send email notification if there are test failures
-                    if (failures.toInteger() > 0) {
-                        emailext subject: "Test Failures in Pipeline",
-                                  body: "There are test failures in the pipeline. Please check the results.",
-                                  to: "khangtgr@gmail.com",
-                                  mimeType: 'text/plain'
-                    }
-                }
+            // Send email notification if there are test failures
+            if (failures.toInteger() > 0) {
+                emailext subject: "Test Failures in Pipeline",
+                        body: "There are test failures in the pipeline. Please check the results.",
+                        to: "khangtgr@gmail.com",
+                        mimeType: 'text/plain'
             }
         }
+        
     }
 }
