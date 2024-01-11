@@ -1,5 +1,5 @@
 # Server setup commands
-sudo amazon-linux-extras install php7.4 -y
+sudo amazon-linux-extras install php8.1 -y
 sudo yum install httpd -y
 sudo yum install mariadb-server -y
 sudo yum install php-dom -y
@@ -7,8 +7,6 @@ sudo systemctl start httpd
 sudo systemctl enable httpd
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
-
-sudo mysql <sql/setup-script.sql
 
 sudo yum install php-cli php-json php-common php-mbstring wget -y
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -18,9 +16,3 @@ php -r "unlink('composer-setup.php');"
 sudo curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 sudo chmod +x /usr/local/bin/composer
-/usr/local/bin/composer install
-
-/usr/local/bin/composer require --dev phpunit/phpunit
-
-# Testing commands
-vendor/bin/phpunit --log-junit test-results.xml tests/

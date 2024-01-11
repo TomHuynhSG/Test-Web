@@ -1,5 +1,5 @@
 {
-  "name": "ec2-user/ec2-user",
+  "name": "team-6/assignment-3-source",
   "require-dev": {
     "phpunit/phpunit": "10"
   },
@@ -12,6 +12,22 @@
     {
       "name": "Khang Nguyen",
       "email": "s3929994@rmit.edu.vn"
+    },
+    {
+      "name": "Huy Pham",
+      "email": "s3926681@rmit.edu.vn"
+    },
+    {
+      "name": "Quang Nguyen",
+      "email": "s3927039@rmit.edu.vn"
+    },
+    {
+      "name": "Duong Vo",
+      "email": "s3821186@rmit.edu.vn"
+    },
+    {
+      "name": "Dong Pham",
+      "email": "s3817726@rmit.edu.vn"
     }
   ]
 }
