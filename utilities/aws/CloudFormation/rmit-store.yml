@@ -11,7 +11,7 @@ Resources:
         - AnsibleSecurityGroup
       Tags: 
         - Key: Name
-          Value: RMIT_Store_Ansible
+          Value: Anh_RMIT_Store_Ansible
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -73,7 +73,7 @@ Resources:
         - JenkinsSecurityGroup
       Tags: 
         - Key: Name
-          Value: RMIT_Store_DB
+          Value: Anh_RMIT_Store_DB
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -154,7 +154,7 @@ Resources:
         - JenkinsSecurityGroup
       Tags: 
         - Key: Name
-          Value: RMIT_Store
+          Value: Anh_RMIT_Store
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -228,7 +228,7 @@ Resources:
           # Run my prepared Docker Image
           sudo docker stop $(sudo docker ps -aq)
           kill $(lsof -t -i tcp:80)
-          docker run -d --name my-rmit-store -p 80:80 laansdole/s3836320-rmit-store
+          docker run -d --name my-rmit-store -p 80:80 laansdole/s3836320-rmit-store:latest
 
   RMITStoreEIP:
     Type: AWS::EC2::EIP
