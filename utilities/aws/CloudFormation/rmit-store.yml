@@ -6,12 +6,12 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: asm3_devops
+      KeyName: s3804811_asm2
       SecurityGroupIds: 
-        - AnsibleSecurityGroup
+        - minikube
       Tags: 
         - Key: Name
-          Value: Anh_RMIT_Store_Ansible
+          Value: RMIT_Store_Ansible
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -68,12 +68,12 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: asm3_devops
+      KeyName: s3804811_asm2
       SecurityGroupIds: 
-        - JenkinsSecurityGroup
+        - minikube
       Tags: 
         - Key: Name
-          Value: Anh_RMIT_Store_DB
+          Value: RMIT_Store_DB
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -149,12 +149,12 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: asm3_devops
+      KeyName: s3804811_asm2
       SecurityGroupIds: 
-        - JenkinsSecurityGroup
+        - minikube
       Tags: 
         - Key: Name
-          Value: Anh_RMIT_Store
+          Value: RMIT_Store
       Monitoring: true
       UserData: 
         Fn::Base64: !Sub |
@@ -228,7 +228,7 @@ Resources:
           # Run my prepared Docker Image
           sudo docker stop $(sudo docker ps -aq)
           kill $(lsof -t -i tcp:80)
-          docker run -d --name my-rmit-store -p 80:80 laansdole/s3804811-rmit-store:latest
+          docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
 
   RMITStoreEIP:
     Type: AWS::EC2::EIP
