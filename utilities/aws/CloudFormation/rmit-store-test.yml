@@ -65,11 +65,14 @@ Resources:
           # Install Git
           sudo yum install git -y
 
+          # Install Docker
+          sudo yum install docker -y
+
           # Clone RMIT Store repository
           git clone -b dang-branch https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
           # Install Ansible
-          sudo yum install ansible -y
+          amazon-linux-extras install ansible2 -y
 
           # Restart SSH server
           sudo service ssh restart
@@ -228,6 +231,14 @@ Resources:
 
           # Prepare permission for Docker
           sudo usermod -a -G docker ec2-user
+
+          sudo useradd ansibleadmin
+          sudo passwd -d ansibleadmin
+          sudo usermod -aG docker ansibleadmin
+          echo "ansibleadmin ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+          sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          service sshd reload
+
           # Run subsequent commands in the current shell without using newgrp
           (
             # Enable docker service at AMI boot time and start docker service
