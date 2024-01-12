@@ -1,10 +1,10 @@
 name: Docker Image CI
 
 on:
-  workflow_run:
-    workflows: ["PHP Syntax Checker"]
-    types:
-      - completed
+  push:
+    branches: [ release ]
+  pull_request:
+    branches: [ release ]
 
 jobs:
   push_to_registry:
