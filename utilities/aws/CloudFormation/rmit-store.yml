@@ -6,9 +6,9 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: devops_key
+      KeyName: asm3_devops
       SecurityGroupIds: 
-        - launch-wizard-4
+        - AnsibleSecurityGroup
       Tags: 
         - Key: Name
           Value: RMIT_Store_Ansible
@@ -68,9 +68,9 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: devops_key
+      KeyName: asm3_devops
       SecurityGroupIds: 
-        - launch-wizard-2
+        - JenkinsSecurityGroup
       Tags: 
         - Key: Name
           Value: RMIT_Store_DB
@@ -149,9 +149,9 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
-      KeyName: devops_key
+      KeyName: asm3_devops
       SecurityGroupIds: 
-        - launch-wizard-2
+        - JenkinsSecurityGroup
       Tags: 
         - Key: Name
           Value: RMIT_Store
