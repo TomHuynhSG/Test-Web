@@ -195,6 +195,8 @@ Resources:
 
           git clone -b dang-branch https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
+          cp ./COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
+
           # Install tree command to show the directory tree of the pulled repository
           sudo yum install tree -y
           tree ~/COSC2767-RMIT-Store/
