@@ -1,14 +1,18 @@
 - hosts: dockerserver
   tasks:
-    - name: Start docker service
+    - name: Clone the code from Git
+      command: source ./init_repo.sh
+      ignore_errors: yes
+
+    - name: Start the docker service
       command: sudo service docker start
       ignore_errors: yes
 
-    - name: register all docker containers id are running
+    - name: Register all docker containers id are running
       command: sudo docker ps -aq
       register: dockerContainerIds
 
-    - name: register all current docker images id
+    - name: Register all current docker images id
       command: sudo docker images -aq
       register: dockerImagesIds
 
@@ -28,12 +32,14 @@
       command: sudo docker logout
       ignore_errors: yes
 
-    - name: Log in to my Dockerhub
+    - name: Log in to the Dockerhub Account
       command: sudo docker login -u "dangla862000" -p "Hd9938058." docker.io
 
-    - name: Build images based on current Dockerfile
+    - name: Build images based on the Dockerfile on Docker server
       command: sudo docker build -t apache-rmit-store:latest ./COSC2767-RMIT-Store/utilities
 
-    - name: Run the apache container based on pushed docker hub image
-      command: sudo docker run -d --name my-rmit-store --rm -p 80:80 apache-rmit-store:latest
+    - name: Tag image to current DockerHub image
+      command: sudo docker tag apache-rmit-store:latest dangla862000/apache-rmit-store:latest
 
+    - name: Run the apache container based on pushed docker hub image
+      command: sudo docker run -d --name my-rmit-store --rm -p 8080:80 apache-rmit-store:latest
