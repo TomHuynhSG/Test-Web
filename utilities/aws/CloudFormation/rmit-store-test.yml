@@ -240,7 +240,7 @@ Resources:
           )
 
           # Run my prepared Docker Image
-          docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
+          docker run -d --name my-rmit-store -p 80:80 laansdole/s3836320-rmit-store
 
           # Change hostname
           rm -f /etc/hostname

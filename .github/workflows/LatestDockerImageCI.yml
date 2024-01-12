@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ release ]
+    branches: [ vananh-release ]
   pull_request:
-    branches: [ release ]
+    branches: [ vananh-release ]
 
 jobs:
   push_to_registry:
@@ -24,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: laansdole/s3963207-rmit-store
+          images: laansdole/s3836320-rmit-store
       
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -32,4 +32,4 @@ jobs:
           context: .
           file: ./utilities/Dockerfile
           push: true
-          tags: laansdole/s3963207-rmit-store:${{ github.sha }}, laansdole/s3963207-rmit-store:latest
+          tags: laansdole/s3836320-rmit-store:${{ github.sha }}, laansdole/s3836320-rmit-store:latest

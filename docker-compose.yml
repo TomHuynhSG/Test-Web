@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    image: laansdole/s3963207-rmit-store
+    image: laansdole/s3836320-rmit-store
     ports:
       - "80:80"
       - "443:443"
