@@ -6,7 +6,7 @@ RUN yum -y install httpd
 RUN yum install -y mariadb-server
 RUN yum install -y php php-mysql
 RUN yum install -y git
-RUN git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git /var/www/html/
+RUN git clone -b vananh-release https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git /var/www/html/
 # Install EPEL Repo
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
     && rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
