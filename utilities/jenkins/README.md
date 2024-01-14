@@ -129,10 +129,4 @@ pip3 install selenium
 pip3 install pytest
 pip3 install urllib3==1.26.8
 pip3 install webdriver_manager
-
-
-
-cd /var/lib/jenkins/workspace/PerformWebUiTestIfFailedEmailOrPassedProceed/
-python3 -m unittest discover --pattern=rmit_store_tests.py
-deactivate
 ```
