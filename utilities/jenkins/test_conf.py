@@ -32,7 +32,7 @@ def setup():
     ("Stationery", "//a[contains(text(), 'Stationery')]"),
     ("Special-Collection", "//a[contains(text(), 'Special-Collection')]"),
     ("Sale", "//a[contains(text(), 'Sale')]"),
-    ("Buy Now!", "//a[contains(text(), 'Buy Now!')]")")
+    ("Buy Now!", "//a[contains(text(), 'Buy Now!')]")
 ])
 def test_button_is_enabled(setup, button_text, xpath):
     driver = setup
