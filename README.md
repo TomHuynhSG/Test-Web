@@ -12,7 +12,8 @@
 #  AWSAcademy Learner Lab, GitHub Documentation, Docker Documentation
 #  ngrok Documentation, Jenkins Documentation
 ```
-
+# CI/CD Pipeline on local
+- Refer to [utilities README.md](./utilities/README.md)
 # RMIT Store 🛍️
 <p align="center">
     <img src="https://i.imgur.com/e6H7HA3.jpg" width=900>
