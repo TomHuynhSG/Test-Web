@@ -1,0 +1,38 @@
+- hosts: dockerserver
+  tasks:
+    - name: Start the docker service
+      command: sudo service docker start
+      ignore_errors: yes
+
+    - name: Register all docker containers id are running
+      command: sudo docker ps -aq
+      register: dockerContainerIds
+
+    - name: Register all current docker images id
+      command: sudo docker images -aq
+      register: dockerImagesIds
+
+    - name: Stop all containers
+      command: "sudo docker stop my-rmit-store"
+      ignore_errors: yes
+
+    - name: Remove all containers
+      command: "sudo docker rm my-rmit-store"
+      ignore_errors: yes
+
+    - name: Remove all images
+      command: "sudo docker rmi --force apache-rmit-store:latest"
+      ignore_errors: yes
+
+    - name: Log out if connected to Docker
+      command: sudo docker logout
+      ignore_errors: yes
+
+    - name: Log in to the Dockerhub Account
+      command: sudo docker login -u "dangla862000" -p "Hd9938058." docker.io
+
+    - name: Build images based on the Dockerfile on Docker server
+      command: sudo docker build -t apache-rmit-store:latest .
+
+    - name: Run the apache container based on pushed docker hub image
+      command: sudo docker run -d --name my-rmit-store --rm -p 8080:80 apache-rmit-store:latest

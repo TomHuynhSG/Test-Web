@@ -48,7 +48,7 @@ Resources:
           find . -type f -name "*.sh" -exec chmod +x {} \;
 
           echo "Bash script files in assignment-3 directory made executable."
-
+          cd ~
           ' >> /root/init_repo.sh
 
           chmod +x /root/init_repo.sh
@@ -69,7 +69,7 @@ Resources:
 
           # Add required dependencies for the jenkins package
           sudo yum install fontconfig -y
-          sudo yum install java-11-openjdk -y
+          sudo amazon-linux-extras install java-openjdk11 -y
           sudo yum install jenkins -y
 
           sudo systemctl daemon-reload
@@ -159,7 +159,7 @@ Resources:
           find . -type f -name "*.sh" -exec chmod +x {} \;
 
           echo "Bash script files in assignment-3 directory made executable."
-
+          cd ~
           ' >> /root/init_repo.sh
 
           chmod +x /root/init_repo.sh
@@ -280,6 +280,7 @@ Resources:
           source /root/init_repo.sh
           kill $(lsof -t -i tcp:80)
           docker start my-rmit-store
+          cp /root/COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
           ' >> /root/.bashrc
           echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
 
@@ -302,6 +303,7 @@ Resources:
           find . -type f -name "*.sh" -exec chmod +x {} \;
 
           echo "Bash script files in assignment-3 directory made executable."
+          cd ~
           ' >> /root/init_repo.sh
 
           chmod +x /root/init_repo.sh
