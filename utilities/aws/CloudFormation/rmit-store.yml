@@ -228,7 +228,7 @@ Resources:
           # Run my prepared Docker Image
           sudo docker stop $(sudo docker ps -aq)
           kill $(lsof -t -i tcp:80)
-          docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
+          docker run -d --name my-rmit-store -p 80:80 laansdole/s3804811-rmit-store
 
   RMITStoreEIP:
     Type: AWS::EC2::EIP
