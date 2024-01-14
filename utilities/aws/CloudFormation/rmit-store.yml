@@ -270,6 +270,7 @@ Resources:
           kill $(lsof -t -i tcp:80)
           docker start my-rmit-store
           cp /root/COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
+          Server is running at http://$(curl -s http://checkip.amazonaws.com/)
           ' >> /root/.bashrc
           echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
 
