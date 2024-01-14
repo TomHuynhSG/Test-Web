@@ -6,6 +6,7 @@ public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 sudo su -
 
 echo "source /root/init_repo.sh" >> /root/.bashrc
+echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
 
 echo '
 #!/bin/bash
@@ -19,10 +20,6 @@ fi
 
 git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
-# Install tree command to show the directory tree of the pulled repository
-sudo yum install tree -y
-tree ~/COSC2767-RMIT-Store/
-
 # Navigate to the COSC2767-RMIT-Store directory
 cd ~/COSC2767-RMIT-Store/utilities
 
@@ -30,10 +27,16 @@ cd ~/COSC2767-RMIT-Store/utilities
 find . -type f -name "*.sh" -exec chmod +x {} \;
 
 echo "Bash script files in assignment-3 directory made executable."
-
+cd ~
 ' >> /root/init_repo.sh
 
 chmod +x /root/init_repo.sh
 
 # Install Git
 sudo yum install git -y
+
+########## Custom Setup goes below ##########
+
+service sshd reload
+
+reboot
