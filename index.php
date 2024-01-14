@@ -93,7 +93,7 @@
                   "database-1.cmadnj1topvn.us-east-1.rds.amazonaws.com",
                   "db_admin",
                   "rmit_password",
-                  "rmit_store_db1"
+                  "rmit_store_db"
               );
               if ($link) {
                   $res = mysqli_query($link, "select * from stores;");
