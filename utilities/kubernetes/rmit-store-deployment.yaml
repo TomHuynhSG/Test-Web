@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmit-store-deploy
+  labels:
+    name: rmit-store-deploy
+    app: demo-rmit-store
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: rmit-store-pod
+      app: demo-rmit-store
+
+  template:
+    metadata:
+      name: rmit-store-pod
+      labels:
+        name: rmit-store-pod
+        app: demo-rmit-store
+    spec:
+      containers:
+        - name: rmit-store
+          image: laansdole/s3804811-rmit-store
+          ports:
+            - containerPort: 80
