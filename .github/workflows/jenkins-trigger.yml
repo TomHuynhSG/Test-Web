@@ -1,0 +1,23 @@
+name: Trigger Jenkins Pipeline
+
+on:
+  workflow_run:
+    workflows: ["Docker Image CI"]
+    types:
+      - completed
+
+jobs:
+  trigger-a-jenkins-job:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - id: triggerjenkinsjob
+        uses: mickeygoussetorg/trigger-jenkins-job@v1
+        with:
+          jenkins-server: ${{ secrets.JENKINS_HOST }} # URL of the jenkins server. ex: http://myjenkins.acme.com:8080
+          jenkins-job: ${{ secrets.JENKINS_JOB }} # The name of the jenkins job to run ex: BuildAndDeployJob
+          jenkins-username: ${{ secrets.JENKINS_USERNAME }} # user name for accessing jenkins ex: s3963207
+          jenkins-pat: ${{ secrets.JENKINS_TOKEN }} # personal Access token for accessing Jenkins ex: TOKEN_NAME
+          poll-time: 10 # how often (seconds) to poll the jenkins server for results
+          timeout-value: 1200 # How long (seconds) to poll before timing out the action
+          verbose: true # true/false - turns on extra logging
