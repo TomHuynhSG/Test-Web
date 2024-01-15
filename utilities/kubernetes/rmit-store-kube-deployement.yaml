@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmit-store-deploy
+  labels:
+    name: rmit-store-deploy
+    app: demo-rmit-store
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: rmit-store-pod
+      app: demo-rmit-store
+
+  template:
+    metadata:
+      name: rmit-store-pod
+      labels:
+        name: rmit-store-pod
+        app: demo-rmit-store
+    spec:
+      containers:
+        - name: rmit-store
+          image: laansdole/s3804811-rmit-store
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rmit-store-service
+  labels:
+    name: rmit-store-service
+    app: demo-rmit-store
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    name: rmit-store-pod
+    app: demo-rmit-store
