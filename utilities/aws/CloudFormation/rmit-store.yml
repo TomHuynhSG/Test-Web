@@ -107,6 +107,28 @@ Resources:
 
           service sshd reload
 
+          ########## Pytest Setup ##########
+          
+          # Install Google Chrome Binary for Linux
+          sudo yum install -y liberation-fonts
+          sudo yum install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+          echo "google-chrome --version" >>/root/.bashrc
+
+          # Install ChromeDriver Binary for Linux
+          sudo yum install -y unzip
+          wget https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_linux64.zip
+          sudo unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/bin/chromedriver
+          echo "chromedriver --version" >>/root/.bashrc
+
+          # Install Python packages
+          sudo pip3 install virtualenv
+          pip3 install faker
+          pip3 install selenium
+          pip3 install pytest
+          pip3 install urllib3==1.26.8
+          pip3 install webdriver_manager
+
           reboot
 
   AnsibleEC2Instance:
