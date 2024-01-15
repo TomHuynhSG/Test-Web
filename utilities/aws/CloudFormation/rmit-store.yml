@@ -22,10 +22,6 @@ Resources:
 
           sudo su -
 
-          echo "source /root/init_repo.sh" >> /root/.bashrc
-          echo "sudo amazon-linux-extras install java-openjdk11 -y" >> /root/.bashrc
-          echo "source /root/COSC2767-RMIT-Store/utilities/maven/maven_install.sh" >> /root/.bashrc
-
           echo '
           #!/bin/bash
 
@@ -46,6 +42,21 @@ Resources:
 
           echo "Bash script files in assignment-3 directory made executable."
           cd ~
+
+          # Install Java OpenJDK 11, required dependenciess for the jenkins package
+          # Check if Java is already installed
+          if command -v java &> /dev/null || type -p java; then
+            echo "Java is already installed, skipping..."
+          else
+            echo "Installing Java OpenJDK 11..."
+            sudo amazon-linux-extras install java-openjdk11 -y
+          fi
+
+          # Setup Maven
+          source /root/COSC2767-RMIT-Store/utilities/maven/maven_install.sh
+
+          # Source .bashrc to apply changes
+          source ~/.bashrc
           ' >> /root/init_repo.sh
 
           chmod +x /root/init_repo.sh
@@ -108,7 +119,7 @@ Resources:
           service sshd reload
 
           ########## Pytest Setup ##########
-          
+
           # Install Google Chrome Binary for Linux
           sudo yum install -y liberation-fonts
           sudo yum install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
