@@ -23,7 +23,8 @@ Resources:
           sudo su -
 
           echo "source /root/init_repo.sh" >> /root/.bashrc
-          echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
+          echo "sudo amazon-linux-extras install java-openjdk11 -y" >> /root/.bashrc
+          echo "source /root/COSC2767-RMIT-Store/utilities/maven/maven_install.sh" >> /root/.bashrc
 
           echo '
           #!/bin/bash
@@ -171,6 +172,10 @@ Resources:
           # Add ansible admin to sudoer
           sudo useradd ansibleadmin
           sudo passwd -d ansibleadmin
+
+          # Set a new password
+          echo "ansibleadmin:ansibleadmin" | sudo chpasswd
+
           echo "ansibleadmin ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
           sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
@@ -270,7 +275,7 @@ Resources:
           kill $(lsof -t -i tcp:80)
           docker start my-rmit-store
           cp /root/COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
-          Server is running at http://$(curl -s http://checkip.amazonaws.com/)
+          echo "Server is running at http://$(curl -s http://checkip.amazonaws.com/)"
           ' >> /root/.bashrc
           echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
 
@@ -333,8 +338,10 @@ Resources:
           rm -f /etc/hostname
           echo "dev_server" >> /etc/hostname
 
-          # Add ansible admin to sudoer
+          # Add ansibleadmin user
           sudo useradd ansibleadmin
+
+          # Delete the current password (if any)
           sudo passwd -d ansibleadmin
 
           sudo usermod -aG docker ansibleadmin
