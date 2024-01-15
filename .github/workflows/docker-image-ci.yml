@@ -2,9 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ release ]
-  pull_request:
-    branches: [ release ]
+    paths:
+    - '**.php'
 
 jobs:
   push_to_registry:
