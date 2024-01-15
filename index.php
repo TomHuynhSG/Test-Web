@@ -85,7 +85,7 @@
 
         <section class="rmit-store-section row">
             <div class="check_tittle wow fadeInUp" data-wow-delay="0.4s" id="item-list">
-                <h2>Our Store at 2:15pm</h2>
+                <h2>Our Store at 2:18pm</h2>
             </div>
             <div class="row rmit-product-section">
               <?php
