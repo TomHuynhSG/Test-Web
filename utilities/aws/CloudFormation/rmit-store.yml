@@ -232,8 +232,9 @@ Resources:
   KubectlEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0ed9277fb7eb570c9
+      ImageId: ami-0005e0cfe09cc9050
       InstanceType: t2.micro
+      IamInstanceProfile: LabInstanceProfile
       KeyName: s3804811_asm2
       SecurityGroupIds:
         - minikube
@@ -260,7 +261,7 @@ Resources:
           echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
-
+          aws eks update-kubeconfig --name eks-tutorial-cluster --region us-east-1
           echo '
           #!/bin/bash
 
