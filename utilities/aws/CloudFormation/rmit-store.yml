@@ -1,5 +1,5 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: 'This is a template for launching a EC2 Instance that host a RMITStore Server'
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is a template for launching a EC2 Instance that host a RMITStore Server"
 Resources:
   AnsibleEC2Instance:
     Type: AWS::EC2::Instance
@@ -7,13 +7,13 @@ Resources:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3804811_asm2
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - minikube
-      Tags: 
+      Tags:
         - Key: Name
           Value: RMIT_Store_Ansible
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -21,7 +21,7 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
-          
+
           # Change hostname
           rm -f /etc/hostname
           echo "ansible_server" >> /etc/hostname
@@ -62,20 +62,19 @@ Resources:
           # Clone RMIT Store repository
           git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
-
   RMITStoreDatabaseEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3804811_asm2
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - minikube
-      Tags: 
+      Tags:
         - Key: Name
           Value: RMIT_Store_DB
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -83,7 +82,7 @@ Resources:
           public_ipv4=$(curl -s http://checkip.amazonaws.com/)
 
           sudo su -
-          
+
           # Change hostname
           rm -f /etc/hostname
           echo "db_server" >> /etc/hostname
@@ -150,13 +149,13 @@ Resources:
       ImageId: ami-0ed9277fb7eb570c9
       InstanceType: t2.micro
       KeyName: s3804811_asm2
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - minikube
-      Tags: 
+      Tags:
         - Key: Name
           Value: RMIT_Store
       Monitoring: true
-      UserData: 
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -230,11 +229,75 @@ Resources:
           kill $(lsof -t -i tcp:80)
           docker run -d --name my-rmit-store -p 80:80 laansdole/s3804811-rmit-store
 
+  KubectlEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0ed9277fb7eb570c9
+      InstanceType: t2.micro
+      KeyName: s3804811_asm2
+      SecurityGroupIds:
+        - minikube
+      Tags:
+        - Key: Name
+          Value: Kubectl_Server
+      Monitoring: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+
+          echo "sudo su -" >> /home/ec2-user/.bashrc
+          public_ipv4=$(curl -s http://checkip.amazonaws.com/)
+
+          sudo su -
+
+          # Change hostname
+          rm -f /etc/hostname
+          echo "dev_server" >> /etc/hostname
+
+          curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.3/2023-11-14/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+          echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
+
+          echo '
+          #!/bin/bash
+
+          # Check if COSC2767-RMIT-Store/ exists
+          if [ -d "COSC2767-RMIT-Store" ]; then
+              echo "Removing COSC2767-RMIT-Store/..."
+              rm -rf COSC2767-RMIT-Store/
+              echo "COSC2767-RMIT-Store/ removed."
+          fi
+
+          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+
+          # Install tree command to show the directory tree of the pulled repository
+          sudo yum install tree -y
+          tree ~/COSC2767-RMIT-Store/
+
+          # Navigate to the COSC2767-RMIT-Store directory
+          cd ~/COSC2767-RMIT-Store/utilities
+
+          # Find all Bash script files and make them executable
+          find . -type f -name "*.sh" -exec chmod +x {} \;
+
+          echo "Bash script files in assignment-3 directory made executable."
+
+          # Source .bashrc to apply changes
+          source ~/.bashrc
+          ' >> /root/init_repo.sh
+
+          chmod +x /root/init_repo.sh
+
+          # Install Git
+          sudo yum install git -y
+
   RMITStoreEIP:
     Type: AWS::EC2::EIP
-    Properties:
-      {}
-    
+    Properties: {}
+
   RMITStoreEIPAssociation:
     Type: AWS::EC2::EIPAssociation
     Properties:
@@ -244,19 +307,20 @@ Resources:
   RMITStoreRecoveryAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: Trigger a recovery when instance status check fails for 15
+      AlarmDescription:
+        Trigger a recovery when instance status check fails for 15
         consecutive minutes.
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '15'
+      Period: "60"
+      EvaluationPeriods: "15"
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
-      AlarmActions: [ !Sub "arn:aws:automate:${AWS::Region}:ec2:recover" ]
+      Threshold: "0"
+      AlarmActions: [!Sub "arn:aws:automate:${AWS::Region}:ec2:recover"]
       Dimensions:
-      - Name: InstanceId
-        Value: !Ref RMITStoreEC2Instance
+        - Name: InstanceId
+          Value: !Ref RMITStoreEC2Instance
 
 Outputs:
   ElasticIP:
