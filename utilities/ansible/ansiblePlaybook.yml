@@ -21,7 +21,7 @@
       ignore_errors: yes
 
     - name: Remove all images
-      command: "sudo docker rmi --force apache-rmit-store:latest"
+      command: "sudo docker rmi --force laansdole/s3963207-rmit-store:latest"
       ignore_errors: yes
 
     - name: Log out if connected to Docker
@@ -29,4 +29,4 @@
       ignore_errors: yes
 
     - name: Run the apache container based on pushed docker hub image
-      command: sudo docker run -d --name my-rmit-store --rm -p 80:80 laansdole/s3963207-rmit-store
+      command: sudo docker run -d --name my-rmit-store --rm -p 80:80 laansdole/s3963207-rmit-store:latest
