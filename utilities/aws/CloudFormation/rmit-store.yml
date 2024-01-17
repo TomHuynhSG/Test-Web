@@ -123,7 +123,7 @@ Resources:
           # Install Google Chrome Binary for Linux
           sudo yum install -y liberation-fonts
           sudo yum install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
-          echo "google-chrome --version" >>/root/.bashrc
+          echo "google-chrome --version" >> /root/.bashrc
 
           # Install ChromeDriver Binary for Linux
           sudo yum install -y unzip
@@ -308,8 +308,7 @@ Resources:
           echo '
           source /root/init_repo.sh
           kill $(lsof -t -i tcp:80)
-          docker start my-rmit-store
-          cp /root/COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
+          docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
           echo "Server is running at http://$(curl -s http://checkip.amazonaws.com/)"
           ' >> /root/.bashrc
           echo "cd COSC2767-RMIT-Store/" >> /root/.bashrc
@@ -387,6 +386,8 @@ Resources:
           sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
           service sshd reload
+
+          cp /root/COSC2767-RMIT-Store/utilities/Dockerfile /home/ansibleadmin/
 
           reboot
 
