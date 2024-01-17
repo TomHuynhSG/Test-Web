@@ -390,6 +390,16 @@ Resources:
 
           reboot
 
+  JenkinsEIP:
+    Type: AWS::EC2::EIP
+    Properties: {}
+
+  JenkinsEIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt JenkinsEIP.AllocationId
+      InstanceId: !Ref JenkinsEC2Instance        
+
   RMITStoreEIP:
     Type: AWS::EC2::EIP
     Properties: {}
