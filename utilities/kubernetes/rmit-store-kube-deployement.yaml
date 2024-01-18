@@ -20,9 +20,11 @@ spec:
         name: rmit-store-pod
         app: demo-rmit-store
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: rmit-store
-          image: laansdole/s3804811-rmit-store
+          image: laansdole/s3804811-rmit-store:latest
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 80
 ---
