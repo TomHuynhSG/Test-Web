@@ -270,7 +270,7 @@ Resources:
               echo "Removing COSC2767-RMIT-Store/..."
               rm -rf COSC2767-RMIT-Store/
               echo "COSC2767-RMIT-Store/ removed."
-          fi
+          fi 
 
           git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
@@ -291,6 +291,17 @@ Resources:
           ' >> /root/init_repo.sh
 
           chmod +x /root/init_repo.sh
+
+          #Connect Kubectl to workers
+          cat > connect-eks-workers.sh <<EOF
+          #!/bin/bash
+
+          read -p "Cluster name: " clusterName
+          read -p "Region: " region
+          aws eks update-kubeconfig --name $clusterName --region $region
+
+          EOF
+          chmod +x start.sh
 
           # Install Git
           sudo yum install git -y
