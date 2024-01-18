@@ -231,6 +231,7 @@ Resources:
           Value: TestRMIT-Store_DB
       Monitoring: true
       UserData:
+      UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
 
@@ -391,6 +392,83 @@ Resources:
 
           reboot
 
+  KubectlEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0005e0cfe09cc9050
+      InstanceType: t2.micro
+      IamInstanceProfile: LabInstanceProfile
+      KeyName: s3963207_asm2_key
+      SecurityGroupIds:
+        - JenkinsSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Rmit_Store_Kubectl
+      Monitoring: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+
+          echo "sudo su -" >> /home/ec2-user/.bashrc
+          public_ipv4=$(curl -s http://checkip.amazonaws.com/)
+
+          sudo su -
+
+          # Change hostname
+          rm -f /etc/hostname
+          echo "dev_server" >> /etc/hostname
+
+          # Setup Kubectl
+          curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.3/2023-11-14/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+          echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
+          aws eks update-kubeconfig --name eks-tutorial-cluster --region us-east-1
+
+          echo '
+          #!/bin/bash
+
+          # Check if COSC2767-RMIT-Store/ exists
+          if [ -d "COSC2767-RMIT-Store" ]; then
+              echo "Removing COSC2767-RMIT-Store/..."
+              rm -rf COSC2767-RMIT-Store/
+              echo "COSC2767-RMIT-Store/ removed."
+          fi 
+
+          git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
+
+          # Install tree command to show the directory tree of the pulled repository
+          sudo yum install tree -y
+          tree ~/COSC2767-RMIT-Store/
+
+          # Navigate to the COSC2767-RMIT-Store directory
+          cd ~/COSC2767-RMIT-Store/utilities
+
+          # Find all Bash script files and make them executable
+          find . -type f -name "*.sh" -exec chmod +x {} \;
+
+          echo "Bash script files in assignment-3 directory made executable."
+
+          # Source .bashrc to apply changes
+          source ~/.bashrc
+          ' >> /root/init_repo.sh
+
+          chmod +x /root/init_repo.sh
+
+          #Connect Kubectl to workers
+          echo '
+          #!/bin/bash
+          read -p "Cluster name: " clusterName
+          read -p "Region: " region
+          aws eks update-kubeconfig --name $clusterName --region $region
+          ' >> /root/connect-workers.sh
+          chmod +x connect-workers.sh
+
+          # Install Git
+          sudo yum install git -y        
+
   JenkinsEIP:
     Type: AWS::EC2::EIP
     Properties: {}
@@ -428,8 +506,11 @@ Resources:
       Dimensions:
         - Name: InstanceId
           Value: !Ref RMITStoreEC2Instance
+        - Name: InstanceId
+          Value: !Ref RMITStoreEC2Instance
 
 Outputs:
   ElasticIP:
     Description: Elastic IP Value
     Value: !Ref RMITStoreEIP
+

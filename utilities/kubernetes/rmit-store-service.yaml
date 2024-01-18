@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rmit-store-service
+  labels:
+    name: rmit-store-service
+    app: demo-rmit-store
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    name: rmit-store-pod
+    app: demo-rmit-store
