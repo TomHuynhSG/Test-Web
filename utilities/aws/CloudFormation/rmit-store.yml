@@ -178,7 +178,8 @@ Resources:
 
           git clone -b dev https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store.git
 
-          sudo cp /root/COSC2767-RMIT-Store/utilities/ansible/ansiblePlaybook.yml /root/
+          sudo cp /root/COSC2767-RMIT-Store/utilities/ansible/apachePlaybook.yml /root/ --force
+          sudo cp /root/COSC2767-RMIT-Store/utilities/ansible/kubectlPlaybook.yml /root/ --force
 
           # Navigate to the COSC2767-RMIT-Store directory
           cd ~/COSC2767-RMIT-Store/utilities
