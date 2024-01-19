@@ -85,7 +85,7 @@
 
         <section class="rmit-store-section row">
             <div class="check_tittle wow fadeInUp" data-wow-delay="0.4s" id="item-list">
-                <h2>Our Store at 12:08 Final Testing</h2>
+                <h2>Our Store at 12:19 Final Testing</h2>
                 
             </div>
             <div class="row rmit-product-section">
@@ -93,7 +93,7 @@
               $link = mysqli_connect(
                   "rmit-store.c9kica0o89u0.us-east-1.rds.amazonaws.com",
                   "db_admin",
-                  "rmit_password1",
+                  "rmit_password",
                   "rmit_store_db"
               );
               if ($link) {
