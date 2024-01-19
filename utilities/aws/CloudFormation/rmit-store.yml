@@ -310,6 +310,8 @@ Resources:
           echo '
           source /root/init_repo.sh
           kill $(lsof -t -i tcp:80)
+          docker stop my-rmit-store
+          docker container prune -f
           docker run -d --name my-rmit-store -p 80:80 laansdole/s3963207-rmit-store
           echo "Server is running at http://$(curl -s http://checkip.amazonaws.com/)"
           ' >> /root/.bashrc
