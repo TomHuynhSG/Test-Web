@@ -3,10 +3,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import NoSuchElementException
 
 @pytest.fixture(scope="module")
 def setup():
-    url = "http://44.206.113.151"
+    url = "http://35.169.78.54"
     chrome_options = Options()
 
     options = [
@@ -27,8 +28,7 @@ def setup():
 
 def test_database_error_message(setup):
     driver = setup
-    
-    try:
+    try:  
         # Check if the page contains an element indicative of a database error using XPath
         error_element = driver.find_element("xpath", '//div[@class="error-content"]/h1')
 
@@ -42,6 +42,9 @@ def test_database_error_message(setup):
         else:
             # If no error element is found, assert that everything is okay
             assert True  # Add more relevant assertions if needed
+    except NoSuchElementException:
+        # Handle the case when the error element is not found
+        print("No error element found. Possibly no database connection error.")
 
-    except Exception as e:
-        pass
+        # Add assertions or further handling as needed
+        assert True  
