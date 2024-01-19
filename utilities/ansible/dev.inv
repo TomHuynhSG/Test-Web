@@ -1,2 +1,4 @@
+[kubectlserver]
+172.31.26.235
 [dockerserver]
-172.31.30.187
+172.31.26.3

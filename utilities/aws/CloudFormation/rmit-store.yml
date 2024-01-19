@@ -373,6 +373,8 @@ Resources:
           rm -f /etc/hostname
           echo "dev_server" >> /etc/hostname
 
+          ########## ansibleadmin Setup ##########
+
           # Add ansibleadmin user
           sudo useradd ansibleadmin
 

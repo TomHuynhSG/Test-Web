@@ -1,0 +1,5 @@
+- hosts: kubectlserver
+  tasks:
+    - name: Restart deployment
+      command: kubectl rollout restart deployment
+      ignore_errors: yes
