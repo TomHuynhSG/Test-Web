@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 @pytest.fixture(scope="module")
 def setup():
-    url = "http://35.169.78.54"
+    url = "http://44.206.113.151"
     chrome_options = Options()
 
     options = [
