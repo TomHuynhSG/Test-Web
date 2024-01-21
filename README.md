@@ -10,6 +10,9 @@
 #  Acknowledgement: RMIT Canvas, ChatGPT, AWS Documentation, StackOverflow,
 #  AWSAcademy Learner Lab, GitHub Documentation, Docker Documentation
 #  ngrok Documentation, Jenkins Documentation
+
+# VIDEO DEMONSTRATION LINK: https://youtu.be/WmzPL43t688
+# GITHUB REPO: https://github.com/RMIT-DevOps-Hackathon/COSC2767-RMIT-Store
 ```
 # CI/CD Pipeline on local
 - Refer to [utilities README.md](./utilities/README.md)
