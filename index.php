@@ -93,7 +93,7 @@
               $link = mysqli_connect(
                   "rmit-store.c9kica0o89u0.us-east-1.rds.amazonaws.com",
                   "db_admin",
-                  "rmit_password1",
+                  "rmit_password",
                   "rmit_store_db"
               );
               if ($link) {
